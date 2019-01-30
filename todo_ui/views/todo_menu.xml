@@ -1,6 +1,12 @@
 <?xml version="1.0"?> 
 <odoo> 
     <!-- Actions for the menu items --> 
+<act_window id="action_todo_task_button"
+  name="To-Do Tasks"
+  res_model="todo.task"
+  view_mode="tree,form,calendar,graph,pivot"
+  domain="[('user_id','=',default_user_id)]" />
+  
 <act_window id="action_todo_stage" 
   name="To-Do Task Stages" 
   res_model="todo.task.stage" 

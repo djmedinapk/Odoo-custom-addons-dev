@@ -1,15 +1,51 @@
 <?xml version="1.0"?> 
 <odoo> 
- <record id="view_form_todo_task_ui" 
+<record id="view_graph_todo_task" model="ir.ui.view"> 
+  <field name="model">todo.task</field> 
+    <field name="arch" type="xml"> 
+      <graph type="bar"> 
+        <field name="stage_id" /> 
+        <field name="effort_estimate" type="measure" /> 
+      </graph> 
+    </field> 
+</record>
+<record id="view_pivot_todo_task" model="ir.ui.view"> 
+<field name="model">todo.task</field> 
+  <field name="arch" type="xml"> 
+    <pivot> 
+      <field name="stage_id" type="col" /> 
+      <field name="user_id" /> 
+      <field name="date_deadline" interval="week" /> 
+      <field name="effort_estimate" type="measure" /> 
+    </pivot> 
+  </field> 
+</record>
+<record id="view_calendar_todo_task" model="ir.ui.view"> 
+  <field name="model">todo.task</field> 
+  <field name="arch" type="xml"> 
+    <calendar date_start="date_deadline" color="user_id" 
+      display="[name], Stage [stage_id]" > 
+      <!-- Fields used for the display text --> 
+      <field name="name" /> 
+      <field name="stage_id" /> 
+    </calendar> 
+  </field> 
+</record>
+ 
+</odoo>
+
+<!--
+
+<record id="view_form_todo_task_ui" 
   model="ir.ui.view"> 
   <field name="model">todo.task</field> 
   <field name="priority">15</field> 
   <field name="arch" type="xml"> 
     <form>  
       <header>  
-        <field name="state" invisible="True" />
+        <field name="todo.task.stage.state" invisible="True" />
         <button name="do_toggle_done" type="object" 
-            attrs="{'invisible':[('state','in',['draft'])]}"
+            attrs="{'invisible':[('state','=',['draft'])]}"
             string="Toggle Done"
             class="oe_highlight" />
         <field name="stage_id"
@@ -18,7 +54,7 @@
             options="{'fold_field': 'fold'}" />
         </header>
       <sheet>
-        <field name="my_image" widget="image" class="oe_avatar"/>
+        <field name="image" widget="image" class="oe_avatar"/>
          <div class="oe_title"> 
           <label for="name" class="oe_edit_only"/> 
           <h1><field name="name"/></h1> 
@@ -29,21 +65,29 @@
           </h3> 
         </div> 
         <div name="buttons" class="oe_right oe_button_box">
-          <!-- Smart buttons here … -->
-        </div>
+        <button class="oe_stat_button"
+          type="action" icon="fa-tasks"
+          name="%(action_todo_task_button)d"
+          context="{'default_user_id': user_id}"
+          help="All to-dos for this user" >
+            <field string="To-Dos" name="user_todo_count"
+              widget="statinfo"/>
+        </button>
+      </div>
         <group name="group_top">
           <group name="group_left">
             <field name="date_deadline"/>
+            <field name="effort_estimate"/>
             <separator string="Reference"/>
-            <field name="referes_to"/>
+            <field name="refers_to" attrs="{'invisible':[('state','=',['draft'])]}" />
           </group>
           <group name="group_right">
             <field name="tag_ids" widget="many2many_tags"/>
           </group>
         </group>
       </sheet>
-      <!-- Discuss widgets for history and 
-      communication: --> 
+      <! Discuss widgets for history and 
+      communication: > 
       <div class="oe_chatter">
         <field name="message_follower_ids"  
           widget="mail_followers" /> 
@@ -52,4 +96,11 @@
     </form>
   </field> 
 </record>
-</odoo>
+
+
+
+
+
+
+
+-->

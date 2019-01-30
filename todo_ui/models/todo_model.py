@@ -14,7 +14,7 @@ class Tags(models.Model):
 class Stage(models.Model):
     _name = 'todo.task.stage'
     _description = 'To-Do Etapas'
-    _order = 'sequence,Name'
+    _order = 'sequence,name'
     name = fields.Char('Name')
     desc = fields.Text('Description')
     state = fields.Selection([('draft','New'),('open','Started'),('done','Closed')],'State')
@@ -35,6 +35,7 @@ class TodoTask(models.Model):
     stage_fold = fields.Boolean('Satge Folded?',compute='_compute_stage_fold',search='_search_stage_fold',inverse='_write_stage_fold')
     stage_state = fields.Selection(related='stage_id.state',string='Stage State')
     _sql_constraints = [('todo_task_name_iniq','UNIQUE(name,active)','Task title must be unique!')]
+    effort_estimate = fields.Integer('Effort Estimate')
 
     @api.depends('stage_id.fold')
     def _compute_stage_fold(self):
@@ -52,3 +53,11 @@ class TodoTask(models.Model):
         for todo in self:
             if len(todo.name) < 5:
                 raise ValidationError('Must have 5 chars!')
+    
+    def compute_user_todo_count(self):
+        for task in self:
+            task.user_todo_count = task.search_count([('user_id','=','task.user_id.id')])
+    
+    user_todo_count = fields.Integer('User To-Do Count',compute='compute_user_todo_count')
+
+
