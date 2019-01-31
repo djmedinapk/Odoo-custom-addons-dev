@@ -52,7 +52,7 @@ class TodoTask(models.Model):
     def _check_name_size(self):
         for todo in self:
             if len(todo.name) < 5:
-                raise ValidationError('Must have 5 chars!')
+                raise exceptions.ValidationError('Debe Contener almenos 5 Caracteres!')
     
     def compute_user_todo_count(self):
         for task in self:
